@@ -1,52 +1,22 @@
-import { BigNumber } from "@ethersproject/bignumber";
 import { IToken, tokens } from "../constants";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { useCallback, useMemo, useState } from "react";
 
 export const TokenTable = ({
-  tokenPrices,
-  previousPrices,
+  priceList,
   onChange,
+  likedList,
 }: {
-  tokenPrices: Record<string, BigNumber>;
-  previousPrices: Record<string, BigNumber>;
+  priceList: Record<string, any>;
   onChange: (likedList: string[]) => void;
+  likedList: string[];
 }) => {
-  console.log("render table");
-  const [likedList, setLikedList] = useState<string[]>([]);
-
-  const changeValue = useCallback(
-    (t: IToken) => {
-      const currentPrice =
-        Object.entries(tokenPrices).find(([key]) => key === t.name)?.[1] ??
-        BigNumber.from(0);
-
-      const last24Price =
-        Object.entries(previousPrices).find(([key]) => key === t.name)?.[1] ??
-        BigNumber.from(0);
-
-      const percentChanged = last24Price.isZero()
-        ? BigNumber.from(0)
-        : currentPrice
-            .sub(last24Price)
-            .mul(parseUnits("1", 30))
-            .div(last24Price);
-
-      return formatUnits(percentChanged, 28) + "%";
-    },
-    [tokenPrices, previousPrices]
-  );
-
-  const price = useCallback(
-    (t: IToken) => {
-      const price =
-        Object.entries(tokenPrices).find(([key]) => key === t.name)?.[1] ??
-        BigNumber.from(0);
-
-      return formatUnits(price, 30);
-    },
-    [tokenPrices]
-  );
+  const handleLikeList = (tokenName: string) => {
+    if (likedList.find((l) => l === tokenName)) {
+      const removed = likedList.filter((l) => l !== tokenName);
+      onChange(removed);
+    } else {
+      onChange([...likedList, tokenName]);
+    }
+  };
 
   return (
     <div style={{ padding: 8, width: "70%" }}>
@@ -63,26 +33,19 @@ export const TokenTable = ({
           {tokens.map((t) => (
             <tr key={t?.name}>
               <td>
-                <button
-                  onClick={() => {
-                    if (likedList.find((l) => l === t.name)) {
-                      setLikedList(likedList.filter((l) => l !== t.name));
-                      onChange(likedList);
-                    } else {
-                      likedList.push(t.name);
-                      setLikedList(likedList);
-                      onChange(likedList);
-                    }
-                  }}
-                >
+                <button onClick={() => handleLikeList(t?.name)}>
                   {likedList.includes(t.name) ? "Liked" : "Like"}
                 </button>
               </td>
               <td>{t.name}</td>
-              <td style={{ textAlign: "right" }}>{price(t)}</td>
+              <td style={{ textAlign: "right" }}>
+                {priceList?.[t.name]?.price}
+              </td>
               {/* todo: show red number when change is negative */}
               {/*       show green number when change is positive */}
-              <td style={{ textAlign: "right" }}>{changeValue(t)}</td>
+              <td style={{ textAlign: "right" }}>
+                {priceList?.[t.name]?.change}
+              </td>
             </tr>
           ))}
         </tbody>

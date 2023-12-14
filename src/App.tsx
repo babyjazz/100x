@@ -1,14 +1,15 @@
 import { useState } from "react";
-import "./App.css";
 import { useSubPythPrices } from "./hooks/useSubPythPrices";
 import { TokenTable } from "components/TokenTable";
-import { LikedList } from "components/LikedList";
+import LikedList from "components/LikedList";
 import { LikedTokenReport } from "components/LikedTokenReport";
 import { tokens } from "./constants";
+import "./App.css";
 
 function App() {
   const [likedList, setLikedList] = useState<string[]>([]);
-  const [tokenPrices, previousTokenPrices] = useSubPythPrices();
+  const [priceList] = useSubPythPrices();
+  //   console.log("debug #li", likedList);
 
   return (
     <div className='App'>
@@ -16,13 +17,13 @@ function App() {
         <header className='App-header'>
           Token prices from {tokens.length} tokens
         </header>
-        <LikedTokenReport likedTokens={likedList} tokenPrices={tokenPrices} />
+        {/* <LikedTokenReport likedTokens={likedList} tokenPrices={tokenPrices} /> */}
       </div>
       <div className='App-content'>
         <TokenTable
-          tokenPrices={tokenPrices}
-          previousPrices={previousTokenPrices}
+          priceList={priceList}
           onChange={setLikedList}
+          likedList={likedList}
         />
         <LikedList tokens={likedList} />
       </div>

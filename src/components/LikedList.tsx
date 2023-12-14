@@ -1,4 +1,6 @@
-export const LikedList = ({ tokens }: { tokens: string[] }) => {
+import { memo } from "react";
+
+const LikedList = ({ tokens }: { tokens: string[] }) => {
   return (
     <div style={{ padding: 8 }}>
       <div style={{ marginBottom: 16 }}>
@@ -12,3 +14,5 @@ export const LikedList = ({ tokens }: { tokens: string[] }) => {
     </div>
   );
 };
+
+export default memo(LikedList);
