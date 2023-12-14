@@ -1,11 +1,12 @@
-import { IToken, tokens } from "../constants";
+import { tokens } from "../constants";
+import type { IPriceList } from "hooks/useSubPythPrices";
 
 export const TokenTable = ({
   priceList,
   onChange,
   likedList,
 }: {
-  priceList: Record<string, any>;
+  priceList: Record<string, IPriceList>;
   onChange: (likedList: string[]) => void;
   likedList: string[];
 }) => {
@@ -39,12 +40,12 @@ export const TokenTable = ({
               </td>
               <td>{t.name}</td>
               <td style={{ textAlign: "right" }}>
-                {priceList?.[t.name]?.price}
+                {priceList?.[t.name]?.price ?? "0"}
               </td>
               {/* todo: show red number when change is negative */}
               {/*       show green number when change is positive */}
               <td style={{ textAlign: "right" }}>
-                {priceList?.[t.name]?.change}
+                {priceList?.[t.name]?.change ?? "0%"}
               </td>
             </tr>
           ))}

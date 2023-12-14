@@ -1,22 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { EvmPriceServiceConnection, PriceFeed } from "@pythnetwork/pyth-evm-js";
-import { IToken, tokens } from "../constants";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import type { IToken } from "../constants";
+import { tokens } from "../constants";
 
-interface IPriceFeed {
-  change?: BigNumber;
+export interface IPriceList {
+  change?: string;
   tokenName?: string;
-  price?: BigNumber;
+  price?: string;
 }
 
-export const useSubPythPrices = (): [Record<string, any>] => {
-  const [priceList, setPriceList] = useState<IPriceFeed>({});
+export const useSubPythPrices = (): [Record<IToken["name"], IPriceList>] => {
+  const [priceList, setPriceList] = useState<
+    Record<IToken["name"], IPriceList>
+  >({});
   const connection = useRef<EvmPriceServiceConnection | null>(null);
 
   const handleChange = (
-    _priceFeed: any,
-    _previousPriceFeed: any,
+    _priceFeed: Record<string, BigNumber>,
+    _previousPriceFeed: Record<string, BigNumber>,
     tokenName: string
   ) => {
     const currentPrice = _priceFeed[tokenName] ?? BigNumber.from(0);
@@ -27,7 +30,10 @@ export const useSubPythPrices = (): [Record<string, any>] => {
     return formatUnits(percentChanged, 28) + "%";
   };
 
-  const handlePrice = (_priceFeed: any, tokenName: string) => {
+  const handlePrice = (
+    _priceFeed: Record<string, BigNumber>,
+    tokenName: string
+  ) => {
     const price = _priceFeed[tokenName] ?? BigNumber.from(0);
 
     return formatUnits(price, 30);
@@ -62,18 +68,13 @@ export const useSubPythPrices = (): [Record<string, any>] => {
           // set price feed
           priceFeed = { ...priceFeed, [tokenName]: _price };
 
-          // handle
           const change = handleChange(priceFeed, previousPriceFeed, tokenName);
           const price = handlePrice(priceFeed, tokenName);
 
-          // result
+          // Mapped display object
           setPriceList((cur) => ({
             ...cur,
-            [tokenName]: {
-              tokenName,
-              change,
-              price,
-            },
+            [tokenName]: { tokenName, price, change },
           }));
         }
       );
