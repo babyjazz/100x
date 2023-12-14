@@ -1,5 +1,4 @@
 export const LikedList = ({ tokens }: { tokens: string[] }) => {
-  console.log("render liked list");
   return (
     <div style={{ padding: 8 }}>
       <div style={{ marginBottom: 16 }}>

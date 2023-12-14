@@ -11,14 +11,14 @@ function App() {
   const [tokenPrices, previousTokenPrices] = useSubPythPrices();
 
   return (
-    <div className="App">
+    <div className='App'>
       <div style={{ margin: "4rem", textAlign: "center" }}>
-        <header className="App-header">
+        <header className='App-header'>
           Token prices from {tokens.length} tokens
         </header>
         <LikedTokenReport likedTokens={likedList} tokenPrices={tokenPrices} />
       </div>
-      <div className="App-content">
+      <div className='App-content'>
         <TokenTable
           tokenPrices={tokenPrices}
           previousPrices={previousTokenPrices}

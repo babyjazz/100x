@@ -1,7 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { EvmPriceServiceConnection, PriceFeed } from "@pythnetwork/pyth-evm-js";
 import { tokens } from "../constants";
-import { useEffect, useState } from "react";
 
 export const useSubPythPrices = (): [
   Record<string, BigNumber>,
@@ -11,43 +11,43 @@ export const useSubPythPrices = (): [
     Record<string, BigNumber>
   >({});
   const [priceFeed, setPriceFeed] = useState<Record<string, BigNumber>>({});
+  const connection = useRef<EvmPriceServiceConnection | null>(null);
 
   useEffect(() => {
-    const connection = new EvmPriceServiceConnection(
-      "https://xc-mainnet.pyth.network"
-    );
-
-    connection.subscribePriceFeedUpdates(
-      tokens.map((t) => t.priceId),
-      (feed) => {
-        const tokenName = tokens.find(
-          (t) => t.priceId.toLowerCase() === "0x".concat(feed.id)
-        )!.name;
-
-        const _price = parsePriceToIPythPrice(feed);
-
-        setPreviousPriceFeed((cur) => {
-          if (cur[tokenName] && cur[tokenName].gt(BigNumber.from(0)))
-            return cur;
-          return {
-            ...cur,
-            [tokenName]: _price,
-          };
-        });
-
-        setPriceFeed((cur) => {
-          return {
-            ...cur,
-            [tokenName]: _price,
-          };
-        });
-      }
-    );
-
+    if (!connection.current) {
+      connection.current = new EvmPriceServiceConnection(
+        "https://xc-mainnet.pyth.network"
+      );
+      connection.current.subscribePriceFeedUpdates(
+        tokens.map((t) => t.priceId),
+        (feed) => {
+          const tokenName = tokens.find(
+            (t) => t.priceId.toLowerCase() === "0x".concat(feed.id)
+          )!.name;
+          const _price = parsePriceToIPythPrice(feed);
+          setPreviousPriceFeed((cur) => {
+            if (cur[tokenName] && cur[tokenName].gt(BigNumber.from(0)))
+              return cur;
+            return {
+              ...cur,
+              [tokenName]: _price,
+            };
+          });
+          setPriceFeed((cur) => {
+            return {
+              ...cur,
+              [tokenName]: _price,
+            };
+          });
+        }
+      );
+    }
     return () => {
-      connection.closeWebSocket();
+      if (connection.current) {
+        connection.current.closeWebSocket();
+        connection.current = null;
+      }
     };
-    // eslint-disable-next-line
   }, []);
 
   return [priceFeed, previousPriceFeed];
