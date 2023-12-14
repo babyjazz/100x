@@ -21,13 +21,13 @@ export const TokenTable = ({
 
   return (
     <div style={{ padding: 8, width: "70%" }}>
-      <table>
+      <table style={{ tableLayout: "fixed" }}>
         <thead>
           <tr>
             <th>ACTION</th>
             <th>TOKEN</th>
-            <th>PRICE</th>
-            <th>%CHANGE</th>
+            <th style={{ width: 240 }}>PRICE</th>
+            <th style={{ width: 380 }}>%CHANGE</th>
           </tr>
         </thead>
         <tbody>
@@ -40,12 +40,12 @@ export const TokenTable = ({
               </td>
               <td>{t.name}</td>
               <td style={{ textAlign: "right" }}>
-                {priceList?.[t.name]?.price ?? "0"}
+                {priceList?.[t.name]?.price ?? "0.0"}
               </td>
               {/* todo: show red number when change is negative */}
               {/*       show green number when change is positive */}
               <td style={{ textAlign: "right" }}>
-                {priceList?.[t.name]?.change ?? "0%"}
+                {priceList?.[t.name]?.change ?? "0.0%"}
               </td>
             </tr>
           ))}
