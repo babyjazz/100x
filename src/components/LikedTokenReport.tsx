@@ -1,29 +1,37 @@
-import { BigNumber } from "ethers";
+import { useMemo } from "react";
+import { BigNumber } from "bignumber.js";
 
 export const LikedTokenReport = ({
   likedTokens,
-  tokenPrices,
+  priceList,
 }: {
   likedTokens: string[];
-  tokenPrices: Record<string, BigNumber>;
+  priceList: Record<string, any>;
 }) => {
-  console.log("render report");
+  const winner = useMemo(() => {
+    return likedTokens.reduce<string>((winner, token) => {
+      try {
+        if (winner === "X") return token;
+        const _price0 = BigNumber(priceList?.[winner]?.price ?? "0");
+        const _price1 = BigNumber(priceList?.[token]?.price ?? "0");
+        if (!_price0 || !_price1) return winner;
+        return _price0.gt(_price1) ? winner : token;
+      } catch (error) {
+        console.log("debug #", error);
+        return winner;
+      }
+    }, "X");
+  }, [likedTokens, priceList]);
 
-  const winner = likedTokens.reduce<string>((winner, token) => {
-    if (winner === "X") return token;
-    const _price0 = tokenPrices[winner];
-    const _price1 = tokenPrices[token];
-    if (!_price0 || !_price1) return winner;
-    return _price0.gt(_price1) ? winner : token;
-  }, "X");
-
-  const loser = likedTokens.reduce<string>((loser, token) => {
-    if (loser === "X") return token;
-    const _price0 = tokenPrices[loser];
-    const _price1 = tokenPrices[token];
-    if (!_price0 || !_price1) return loser;
-    return _price0.lt(_price1) ? loser : token;
-  }, "X");
+  const loser = useMemo(() => {
+    return likedTokens.reduce<string>((loser, token) => {
+      if (loser === "X") return token;
+      const _price0 = BigNumber(priceList?.[loser]?.price);
+      const _price1 = BigNumber(priceList?.[token]?.price);
+      if (!_price0 || !_price1) return loser;
+      return _price0.lt(_price1) ? loser : token;
+    }, "X");
+  }, [likedTokens, priceList]);
 
   return (
     <div style={{ display: "flex" }}>

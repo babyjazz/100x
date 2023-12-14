@@ -9,7 +9,6 @@ import "./App.css";
 function App() {
   const [likedList, setLikedList] = useState<string[]>([]);
   const [priceList] = useSubPythPrices();
-  //   console.log("debug #li", likedList);
 
   return (
     <div className='App'>
@@ -17,7 +16,7 @@ function App() {
         <header className='App-header'>
           Token prices from {tokens.length} tokens
         </header>
-        {/* <LikedTokenReport likedTokens={likedList} tokenPrices={tokenPrices} /> */}
+        <LikedTokenReport likedTokens={likedList} priceList={priceList} />
       </div>
       <div className='App-content'>
         <TokenTable

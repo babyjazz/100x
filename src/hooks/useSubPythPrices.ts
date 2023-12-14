@@ -5,9 +5,9 @@ import { IToken, tokens } from "../constants";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 interface IPriceFeed {
-  change?: string;
+  change?: BigNumber;
   tokenName?: string;
-  price?: string;
+  price?: BigNumber;
 }
 
 export const useSubPythPrices = (): [Record<string, any>] => {
