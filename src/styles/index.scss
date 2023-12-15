@@ -1,0 +1,23 @@
+@import "styles/global";
+
+html {
+  font-family: sans-serif;
+  color: $color-white;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 1.2;
+}
+
+.app-container {
+  background-color: $color-purple-2;
+  padding: 1rem 2.5rem;
+
+  .app-header-container {
+    padding: 40px 0px;
+  }
+
+  .app-header {
+    color: $color-white-2;
+    line-height: 2;
+  }
+}

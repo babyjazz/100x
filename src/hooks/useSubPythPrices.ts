@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { EvmPriceServiceConnection, PriceFeed } from "@pythnetwork/pyth-evm-js";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
-import type { IToken } from "../constants";
-import { tokens } from "../constants";
+import type { IToken } from "../constants/tokens";
+import { tokens } from "../constants/tokens";
 
 export interface IPriceList {
   change?: string;
@@ -27,7 +27,7 @@ export const useSubPythPrices = (): [Record<IToken["name"], IPriceList>] => {
     const percentChanged = last24Price.isZero()
       ? BigNumber.from(0)
       : currentPrice.sub(last24Price).mul(parseUnits("1", 30)).div(last24Price);
-    return formatUnits(percentChanged, 28) + "%";
+    return formatUnits(percentChanged, 28);
   };
 
   const handlePrice = (

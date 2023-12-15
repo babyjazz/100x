@@ -1,0 +1,25 @@
+@import "styles/global";
+
+.container {
+  padding: 8px;
+  width: 100%;
+  max-width: 600px;
+  min-height: 120px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+
+    .favorite {
+      fill: $color-yellow-1;
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}

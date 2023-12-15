@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { BigNumber } from "bignumber.js";
 import type { IPriceList } from "hooks/useSubPythPrices";
-import type { IToken } from "../constants";
+import type { IToken } from "constants/tokens";
+import styles from "./index.module.scss";
 
 export const LikedTokenReport = ({
   likedTokens,
@@ -31,14 +32,10 @@ export const LikedTokenReport = ({
   }, [likedTokens, priceList]);
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ fontWeight: "bold" }}>
-        HIGHEST Price liked TOKEN: {winner}
-      </div>
-      <div style={{ margin: "0 4rem" }}>||||||||</div>
-      <div style={{ fontWeight: "bold" }}>
-        LOWEST Price liked TOKEN: {loser}
-      </div>
+    <div className={styles.container}>
+      <div className={styles.winner}>HIGHEST Price liked TOKEN: {winner}</div>
+      <div className={styles.divider} />
+      <div className={styles.loser}>LOWEST Price liked TOKEN: {loser}</div>
     </div>
   );
 };
