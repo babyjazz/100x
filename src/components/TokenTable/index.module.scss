@@ -1,70 +1,87 @@
 @import "styles/global";
 
 .container {
-  overflow-x: auto;
+  max-height: 1200px;
+  overflow-y: auto;
+  scrollbar-color: rgba(79, 78, 113, 0.5) $color-purple-1;
+  scrollbar-width: 6px;
+  background-color: $color-purple-1;
+  border-radius: 8px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(79, 78, 113, 0.5);
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $color-purple-1;
+  }
 
   .table {
-    table-layout: fixed;
     border: none;
-    background-color: $color-purple-1;
     border-radius: 0.75rem;
+    width: 100%;
 
     thead {
       border-bottom: 1px solid #363651;
+
       th {
         padding: 24px 40px;
         border: none;
         text-align: right;
-        width: 50px;
         font-size: 0.875rem;
         color: $color-white-2;
         font-weight: 400;
 
         &:nth-child(1) {
           text-align: left;
+          width: 70px;
         }
-        &:nth-child(3) {
-          width: 240px;
+        &:nth-child(2) {
+          text-align: left;
+          width: 0px;
         }
         &:nth-child(4) {
-          width: 380px;
+          width: 40%;
         }
       }
     }
 
-    td {
-      font-size: 1rem;
-      padding: 30px 40px;
-      border: none;
-      text-align: right;
+    tbody {
+      td {
+        // width: 25%;
+        font-size: 1rem;
+        padding: 30px 40px;
+        border: none;
+        text-align: right;
+        margin-left: auto;
 
-      &:nth-child(1) {
-        text-align: left;
-      }
-
-      &:nth-child(2) {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 12px;
-        font-weight: bold;
-      }
-
-      .favorite {
-        fill: $color-purple-3;
-        cursor: pointer;
-
-        &.filled {
-          fill: $color-yellow-1;
+        &:nth-child(1) {
+          text-align: left;
         }
-      }
 
-      &.positive {
-        color: $color-green-1;
-      }
+        &:nth-child(2) {
+          text-align: left;
+        }
 
-      &.negative {
-        color: $color-red-1;
+        .favorite {
+          fill: $color-purple-3;
+          cursor: pointer;
+
+          &.filled {
+            fill: $color-yellow-1;
+          }
+        }
+
+        &.positive {
+          color: $color-green-1;
+        }
+
+        &.negative {
+          color: $color-red-1;
+        }
       }
     }
   }

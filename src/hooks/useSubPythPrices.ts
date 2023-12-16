@@ -7,14 +7,21 @@ import { tokens } from "../constants/tokens";
 
 export interface IPriceList {
   change?: string;
-  tokenName?: string;
+  tokenName: string;
   price?: string;
 }
 
+const initialPriceList: Record<IToken["name"], IPriceList> = tokens.reduce(
+  (prev, cur) => {
+    return { ...prev, [cur.name]: { tokenName: cur.name } };
+  },
+  {}
+);
+
 export const useSubPythPrices = (): [Record<IToken["name"], IPriceList>] => {
-  const [priceList, setPriceList] = useState<
-    Record<IToken["name"], IPriceList>
-  >({});
+  const [priceList, setPriceList] =
+    // @ts-ignore
+    useState<Record<IToken["name"], IPriceList>>(initialPriceList);
   const connection = useRef<EvmPriceServiceConnection | null>(null);
 
   const handleChange = (

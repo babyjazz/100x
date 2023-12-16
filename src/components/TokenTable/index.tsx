@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import cx from "classnames";
 import { BigNumber } from "bignumber.js";
-import { tokens } from "constants/tokens";
 import type { IPriceList } from "hooks/useSubPythPrices";
 import { StarFillIcon } from "constants/images";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import styles from "./index.module.scss";
 
 export const TokenTable = ({
@@ -15,6 +15,19 @@ export const TokenTable = ({
   onChange: (likedList: string[]) => void;
   likedList: string[];
 }) => {
+  const parentRef = useRef(null);
+
+  const rows = useMemo(() => {
+    return Object.values(priceList);
+  }, [priceList]);
+
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 43,
+    overscan: 26,
+  });
+
   const handleLikeList = useCallback(
     (tokenName: string) => {
       if (likedList.find((l) => l === tokenName)) {
@@ -28,7 +41,7 @@ export const TokenTable = ({
   );
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={parentRef}>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -39,35 +52,40 @@ export const TokenTable = ({
           </tr>
         </thead>
         <tbody>
-          {tokens.map((t) => (
-            <tr key={t?.name}>
-              <td>
-                <StarFillIcon
-                  role='button'
-                  onClick={() => handleLikeList(t?.name)}
-                  className={cx(styles.favorite, {
-                    [styles.filled]: likedList.includes(t.name),
-                  })}
-                />{" "}
-              </td>
-              <td>{t.name}</td>
-              <td>
-                {BigNumber(priceList?.[t.name]?.price ?? "0.0").toFormat()}
-              </td>
-              <td
-                className={cx({
-                  [styles.positive]: BigNumber(
-                    priceList?.[t.name]?.change ?? "0"
-                  ).gt("0"),
-                  [styles.negative]: BigNumber(
-                    priceList?.[t.name]?.change ?? "0"
-                  ).lt("0"),
-                })}
+          {virtualizer.getVirtualItems().map((virtualRow, index) => {
+            const t = rows[virtualRow.index];
+            return (
+              <tr
+                key={t.tokenName}
+                style={{
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${
+                    virtualRow.start - index * virtualRow.size
+                  }px)`,
+                }}
               >
-                {priceList?.[t.name]?.change ?? "0.0"}%
-              </td>
-            </tr>
-          ))}
+                <td>
+                  <StarFillIcon
+                    role='button'
+                    onClick={() => handleLikeList(t?.tokenName)}
+                    className={cx(styles.favorite, {
+                      [styles.filled]: likedList.includes(t?.tokenName),
+                    })}
+                  />{" "}
+                </td>
+                <td>{t.tokenName}</td>
+                <td>{BigNumber(t.price ?? "0.0").toFormat()}</td>
+                <td
+                  className={cx({
+                    [styles.positive]: BigNumber(t?.change ?? "0").gt("0"),
+                    [styles.negative]: BigNumber(t?.change ?? "0").lt("0"),
+                  })}
+                >
+                  {t?.change ?? "0.0"}%
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
