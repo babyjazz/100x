@@ -24,8 +24,8 @@ export const TokenTable = ({
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 43,
-    overscan: 26,
+    estimateSize: () => 30,
+    overscan: 20,
   });
 
   const handleLikeList = useCallback(
