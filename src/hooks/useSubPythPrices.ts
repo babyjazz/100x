@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { EvmPriceServiceConnection, PriceFeed } from "@pythnetwork/pyth-evm-js";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
-import type { IToken } from "../constants/tokens";
-import { tokens } from "../constants/tokens";
+import type { IToken } from "constants/tokens";
+import { tokens } from "constants/tokens";
 
 export interface IPriceList {
   change?: string;

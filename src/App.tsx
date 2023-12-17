@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSubPythPrices } from "./hooks/useSubPythPrices";
+import { useSubPythPrices } from "hooks/useSubPythPrices";
 import { TokenTable } from "components/TokenTable";
 import LikedList from "components/LikedList";
 import { LikedTokenReport } from "components/LikedTokenReport";

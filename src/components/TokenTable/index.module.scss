@@ -48,41 +48,5 @@
         }
       }
     }
-
-    tbody {
-      td {
-        // width: 25%;
-        font-size: 1rem;
-        padding: 30px 40px;
-        border: none;
-        text-align: right;
-        margin-left: auto;
-
-        &:nth-child(1) {
-          text-align: left;
-        }
-
-        &:nth-child(2) {
-          text-align: left;
-        }
-
-        .favorite {
-          fill: $color-purple-3;
-          cursor: pointer;
-
-          &.filled {
-            fill: $color-yellow-1;
-          }
-        }
-
-        &.positive {
-          color: $color-green-1;
-        }
-
-        &.negative {
-          color: $color-red-1;
-        }
-      }
-    }
   }
 }

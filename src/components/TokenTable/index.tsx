@@ -1,9 +1,7 @@
-import { useCallback, useMemo, useRef } from "react";
-import cx from "classnames";
-import { BigNumber } from "bignumber.js";
+import { useMemo, useRef } from "react";
 import type { IPriceList } from "hooks/useSubPythPrices";
-import { StarFillIcon } from "constants/images";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import RowComponent from "components/RowTable";
 import styles from "./index.module.scss";
 
 export const TokenTable = ({
@@ -28,18 +26,6 @@ export const TokenTable = ({
     overscan: 20,
   });
 
-  const handleLikeList = useCallback(
-    (tokenName: string) => {
-      if (likedList.find((l) => l === tokenName)) {
-        const removed = likedList.filter((l) => l !== tokenName);
-        onChange(removed);
-      } else {
-        onChange([...likedList, tokenName]);
-      }
-    },
-    [likedList]
-  );
-
   return (
     <div className={styles.container} ref={parentRef}>
       <table className={styles.table}>
@@ -52,40 +38,16 @@ export const TokenTable = ({
           </tr>
         </thead>
         <tbody>
-          {virtualizer.getVirtualItems().map((virtualRow, index) => {
-            const t = rows[virtualRow.index];
-            return (
-              <tr
-                key={t.tokenName}
-                style={{
-                  height: `${virtualRow.size}px`,
-                  transform: `translateY(${
-                    virtualRow.start - index * virtualRow.size
-                  }px)`,
-                }}
-              >
-                <td>
-                  <StarFillIcon
-                    role='button'
-                    onClick={() => handleLikeList(t?.tokenName)}
-                    className={cx(styles.favorite, {
-                      [styles.filled]: likedList.includes(t?.tokenName),
-                    })}
-                  />{" "}
-                </td>
-                <td>{t.tokenName}</td>
-                <td>{BigNumber(t.price ?? "0.0").toFormat()}</td>
-                <td
-                  className={cx({
-                    [styles.positive]: BigNumber(t?.change ?? "0").gt("0"),
-                    [styles.negative]: BigNumber(t?.change ?? "0").lt("0"),
-                  })}
-                >
-                  {t?.change ?? "0.0"}%
-                </td>
-              </tr>
-            );
-          })}
+          {virtualizer.getVirtualItems().map((virtualRow, index) => (
+            <RowComponent
+              key={virtualRow.key}
+              index={index}
+              likedList={likedList}
+              onChange={onChange}
+              row={rows[virtualRow.index]}
+              virtualRow={virtualRow}
+            />
+          ))}
         </tbody>
       </table>
     </div>
