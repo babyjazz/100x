@@ -64,7 +64,7 @@ export const useSubPythPrices = (): [Record<IToken["name"], IPriceList>] => {
           // set previou sprice feed
           if (
             !previousPriceFeed[tokenName] ||
-            !previousPriceFeed[tokenName].gt(BigNumber.from(-1))
+            !previousPriceFeed[tokenName].gt(BigNumber.from(0))
           ) {
             previousPriceFeed = {
               ...previousPriceFeed,
