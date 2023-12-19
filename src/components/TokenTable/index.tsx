@@ -19,6 +19,7 @@ export const TokenTable = ({
     return Object.values(priceList);
   }, [priceList]);
 
+  // Virtualize table is optional up to usecase
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
